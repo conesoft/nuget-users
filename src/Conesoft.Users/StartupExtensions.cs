@@ -7,7 +7,7 @@ namespace Conesoft.Users
 {
     public static class StartupExtensions
     {
-        public static void AddUsers(this IServiceCollection services, string rootPath = "")
+        public static void AddUsers(this IServiceCollection services, Func<string> rootPathDelegate)
         {
             services.AddAuthentication(options =>
             {
@@ -21,8 +21,12 @@ namespace Conesoft.Users
                 options.SlidingExpiration = true;
             });
 
-            UserController.RootPath = rootPath;
+            UserController.RootPath = rootPathDelegate;
         }
+
+        public static void AddUsers(this IServiceCollection services) => services.AddUsers(() => "");
+
+        public static void AddUsers(this IServiceCollection services, string rootPath) => services.AddUsers(() => rootPath);
 
         public static void UseUsers(this IApplicationBuilder app)
         {
