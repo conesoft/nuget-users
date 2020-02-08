@@ -12,9 +12,14 @@ namespace Conesoft.Users
     [Route("[controller]")]
     public class UserController : Controller
     {
-        internal static Func<string> RootPath { get; set; } = () => "";
+        readonly string rootPath;
 
-        string UserFile(string username) => RootPath() != "" ? System.IO.Path.Combine(RootPath(), username + ".txt") : username + ".txt";
+        public UserController([FromServices] UsersRootPath usersRootPath)
+        {
+            rootPath = usersRootPath.Get();
+        }
+
+        string UserFile(string username) => rootPath != "" ? System.IO.Path.Combine(rootPath, username + ".txt") : username + ".txt";
 
         [HttpPost("login")]
         public async Task<IActionResult> PostLoginAsync(string username, string password, string redirectto)
