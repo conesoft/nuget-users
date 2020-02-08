@@ -1,0 +1,12 @@
+﻿@inject NavigationManager NavigationManager
+
+<style>
+    form * {
+        display: block;
+    }
+</style>
+
+<form action="/user/logout" method="post">
+    <input type="hidden" name="redirectto" value="@NavigationManager.Uri" />
+    <input type="submit" value="logout" />
+</form>
