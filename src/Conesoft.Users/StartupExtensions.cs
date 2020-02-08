@@ -22,10 +22,10 @@ namespace Conesoft.Users
             });
         }
 
-        public static void AddUsers(this IServiceCollection services, Func<IServiceProvider, UsersRootPath> rootPathDelegate)
+        public static void AddUsers(this IServiceCollection services, Func<IServiceProvider, string> rootPathDelegate)
         {
             services.AddUsersAuthentication();
-            services.AddSingleton(rootPathDelegate);
+            services.AddSingleton(s => new UsersRootPath(rootPathDelegate(s)));
         }
 
         public static void AddUsers(this IServiceCollection services)
