@@ -24,6 +24,7 @@ namespace Conesoft.Users
         [HttpPost("login")]
         public async Task<IActionResult> PostLoginAsync(string username, string password, string redirectto)
         {
+            username = username.ToLowerInvariant();
             var passwordHasher = new PasswordHasher<string>();
 
             if (System.IO.File.Exists(UserFile(username)))
@@ -62,6 +63,7 @@ namespace Conesoft.Users
         [HttpPost("register")]
         public async Task<IActionResult> PostRegisterAsync(string username, string password, string redirectto)
         {
+            username = username.ToLowerInvariant();
             var passwordHasher = new PasswordHasher<string>();
 
             if (System.IO.File.Exists(UserFile(username)) == false)
