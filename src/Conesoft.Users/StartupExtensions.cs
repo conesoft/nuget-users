@@ -17,7 +17,6 @@ namespace Conesoft.Users
             })
             .AddCookie(options =>
             {
-                options.Cookie.Expiration = TimeSpan.FromDays(365);
                 options.ExpireTimeSpan = TimeSpan.FromDays(365);
                 options.SlidingExpiration = true;
             });
