@@ -3,7 +3,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RazorLangVersion>3.0</RazorLangVersion>
     <RootNamespace>Conesoft.Users</RootNamespace>
-    <Version>1.0.8</Version>
+    <Version>1.0.9</Version>
     <Authors>davepermen</Authors>
     <Company>Conesoft</Company>
   </PropertyGroup>
