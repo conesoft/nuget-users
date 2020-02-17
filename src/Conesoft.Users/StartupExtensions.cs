@@ -9,7 +9,7 @@ namespace Conesoft.Users
 {
     public static class StartupExtensions
     {
-        private static void AddUsersAuthentication(this IServiceCollection services, string applicationName, string rootPath = "")
+        public static void AddUsers(this IServiceCollection services, string applicationName, string rootPath = "")
         {
             services
                 .AddDataProtection()
