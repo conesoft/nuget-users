@@ -1,12 +1,23 @@
 ﻿@inject NavigationManager NavigationManager
 
-<style>
-    form * {
-        display: block;
-    }
-</style>
+@if (BlockStyled)
+{
+    <style>
+        form * {
+            display: block;
+        }
+    </style>
+}
 
 <form action="/user/logout" method="post">
-    <input type="hidden" name="redirectto" value="@NavigationManager.Uri" />
+    <input type="hidden" name="redirectto" value="@(RedirectTo ?? NavigationManager.Uri)" />
     <input type="submit" value="logout" />
 </form>
+
+@code {
+    [Parameter]
+    public string RedirectTo { get; set; } = null;
+
+    [Parameter]
+    public bool BlockStyled { get; set; } = false;
+}
