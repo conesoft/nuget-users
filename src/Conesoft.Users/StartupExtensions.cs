@@ -24,7 +24,7 @@ namespace Conesoft.Users
                     options.SlidingExpiration = true;
                 });
 
-            services.AddSingleton(s => new UsersRootPath(rootPathDelegate(s)));
+            services.AddSingleton(s => new UsersRootPath(rootPath));
         }
 
         public static void UseUsers(this IApplicationBuilder app)
