@@ -25,6 +25,8 @@ namespace Conesoft.Users
                 });
 
             services.AddSingleton(s => new UsersRootPath(rootPath));
+
+            services.AddControllers().AddApplicationPart(typeof(StartupExtensions).Assembly);
         }
 
         public static void UseUsers(this IApplicationBuilder app)
