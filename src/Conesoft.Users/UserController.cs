@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Conesoft.Files;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,14 +13,14 @@ namespace Conesoft.Users
     [Route("[controller]")]
     public class UserController : Controller
     {
-        readonly string rootPath;
+        readonly Directory rootPath;
 
-        public UserController([FromServices] UsersRootPath usersRootPath)
+        public UserController([FromServices] UsersRootDirectory usersRootPath)
         {
-            rootPath = usersRootPath.Get();
+            rootPath = usersRootPath;
         }
 
-        string UserFile(string username) => rootPath != "" ? System.IO.Path.Combine(rootPath, username + ".txt") : username + ".txt";
+        File UserFile(string username) => rootPath / Filename.From(username, "txt");
 
         [HttpPost("login")]
         public async Task<IActionResult> PostLoginAsync(string username, string password, string redirectto)
@@ -27,9 +28,9 @@ namespace Conesoft.Users
             username = username.ToLowerInvariant();
             var passwordHasher = new PasswordHasher<string>();
 
-            if (System.IO.File.Exists(UserFile(username)))
+            if (UserFile(username).Exists)
             {
-                var lines = await System.IO.File.ReadAllLinesAsync(UserFile(username));
+                var lines = await UserFile(username).ReadLines();
 
                 var salt = lines.First();
                 var hashed = lines.Last();
@@ -66,10 +67,10 @@ namespace Conesoft.Users
             username = username.ToLowerInvariant();
             var passwordHasher = new PasswordHasher<string>();
 
-            if (System.IO.File.Exists(UserFile(username)) == false)
+            if (UserFile(username).Exists == false)
             {
                 var newsalt = Guid.NewGuid().ToString().ToLower().Replace("-", "");
-                await System.IO.File.WriteAllLinesAsync(UserFile(username), new[] {
+                await UserFile(username).WriteLines(new[] {
                     newsalt,
                     passwordHasher.HashPassword(username, password + newsalt)
                 });

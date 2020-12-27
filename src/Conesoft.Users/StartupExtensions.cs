@@ -3,17 +3,17 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.IO;
+using Conesoft.Files;
 
 namespace Conesoft.Users
 {
     public static class StartupExtensions
     {
-        public static void AddUsers(this IServiceCollection services, string applicationName, string rootPath = "")
+        public static void AddUsers(this IServiceCollection services, string applicationName, Directory rootDirectory)
         {
             services
                 .AddDataProtection()
-                .PersistKeysToFileSystem(new DirectoryInfo(rootPath))
+                .PersistKeysToFileSystem(rootDirectory.Info)
                 .SetApplicationName(applicationName);
 
             services
@@ -24,7 +24,7 @@ namespace Conesoft.Users
                     options.SlidingExpiration = true;
                 });
 
-            services.AddSingleton(s => new UsersRootPath(rootPath));
+            services.AddSingleton(s => new UsersRootDirectory(rootDirectory));
 
             services.AddControllers().AddApplicationPart(typeof(StartupExtensions).Assembly);
         }
