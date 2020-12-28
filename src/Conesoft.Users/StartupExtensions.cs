@@ -20,7 +20,7 @@ namespace Conesoft.Users
                 .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
                 {
-                    options.Cookie.Name = applicationName;
+                    options.Cookie.Name = applicationName.Replace(' ', '-');
                     options.ExpireTimeSpan = TimeSpan.FromDays(365);
                     options.SlidingExpiration = true;
                 });
@@ -33,7 +33,7 @@ namespace Conesoft.Users
         public static void UseUsers(this IApplicationBuilder app)
         {
             app.UseAuthentication();
-            app.UseCookieCatcher(app.ApplicationServices.GetService<UsersRootDirectory>().ApplicationName);
+            app.UseCookieCatcher(app.ApplicationServices.GetService<UsersRootDirectory>().ApplicationName.Replace(' ', '-'));
         }
     }
 }
