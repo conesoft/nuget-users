@@ -4,8 +4,13 @@ namespace Conesoft.Users
 {
     public class UsersRootDirectory : Directory
     {
-        public UsersRootDirectory(Directory directory) : base(directory)
+        private readonly string applicationName;
+
+        public UsersRootDirectory(string applicationName, Directory directory) : base(directory)
         {
+            this.applicationName = applicationName;
         }
+
+        public string ApplicationName => applicationName;
     }
 }

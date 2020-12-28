@@ -1,9 +1,9 @@
+using Conesoft.Files;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using Conesoft.Files;
 
 namespace Conesoft.Users
 {
@@ -20,11 +20,12 @@ namespace Conesoft.Users
                 .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
                 {
+                    options.Cookie.Name = applicationName;
                     options.ExpireTimeSpan = TimeSpan.FromDays(365);
                     options.SlidingExpiration = true;
                 });
 
-            services.AddSingleton(s => new UsersRootDirectory(rootDirectory));
+            services.AddSingleton(s => new UsersRootDirectory(applicationName, rootDirectory));
 
             services.AddControllers().AddApplicationPart(typeof(StartupExtensions).Assembly);
         }
@@ -32,6 +33,7 @@ namespace Conesoft.Users
         public static void UseUsers(this IApplicationBuilder app)
         {
             app.UseAuthentication();
+            app.UseCookieCatcher(app.ApplicationServices.GetService<UsersRootDirectory>().ApplicationName);
         }
     }
 }
