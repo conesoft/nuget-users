@@ -27,6 +27,7 @@ namespace Conesoft.Users
 
                                 cookie.Domain = domain;
                             }
+                        }
                         catch(Exception)
                         {
                         }
