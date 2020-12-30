@@ -21,7 +21,7 @@ namespace Conesoft.Users
                         if (cookie.Name == cookieName)
                         {
                             var subdomain = request.Host.Host;
-                            var domain = "." + string.Join('.', subdomain.Split('.').TakeLast(2));
+                            var domain = subdomain.Split('.').Count > 1 ? "." + string.Join('.', subdomain.Split('.').TakeLast(2)) : "." + subdomain;
 
                             cookie.Domain = domain;
                         }
