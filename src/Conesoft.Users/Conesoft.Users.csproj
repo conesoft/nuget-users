@@ -3,7 +3,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <RazorLangVersion>3.0</RazorLangVersion>
     <RootNamespace>Conesoft.Users</RootNamespace>
-    <Version>1.1.5</Version>
+    <Version>1.1.6</Version>
     <Authors>davepermen</Authors>
     <Company>Conesoft</Company>
   </PropertyGroup>
@@ -13,6 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Conesoft.Files" Version="1.1.2" />
+    <PackageReference Include="Conesoft.Files" Version="1.5.3" />
   </ItemGroup>
 </Project>

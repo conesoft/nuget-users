@@ -19,7 +19,7 @@ namespace Conesoft.Users
                 {
                     response.GetTypedHeaders().SetCookie = response.GetTypedHeaders().SetCookie.Select(cookie =>
                     {
-                        if (cookie.Name == cookieName)
+                        if (cookie.Name == cookieName && request.Host.Host.Count(c => c == '.') > 1)
                         {
                             var subdomain = request.Host.Host;
                             var domain = string.Join('.', subdomain.Split('.').TakeLast(2));

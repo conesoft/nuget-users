@@ -2,7 +2,7 @@
 
 namespace Conesoft.Users
 {
-    public class UsersRootDirectory : Directory
+    public record UsersRootDirectory : Directory
     {
         private readonly string applicationName;
 
