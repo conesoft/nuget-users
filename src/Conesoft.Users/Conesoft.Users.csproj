@@ -3,22 +3,17 @@
     <TargetFramework>net5.0</TargetFramework>
     <RazorLangVersion>3.0</RazorLangVersion>
     <RootNamespace>Conesoft.Users</RootNamespace>
-    <Version>1.1.8</Version>
-    <Authors>davepermen</Authors>
-    <Company>Conesoft</Company>
-    <PackageIcon>Conesoft.forNuget.x256.png</PackageIcon>
-  <PackageProjectUrl>https://github.com/conesoft/users</PackageProjectUrl>
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>1.1.9</Version>
+    <Version>1.1.10</Version>
     <Authors>davepermen</Authors>
     <Company>Conesoft</Company>
     <PackageIcon>Conesoft.forNuget.x256.png</PackageIcon>
     <PackageProjectUrl>https://github.com/conesoft/users</PackageProjectUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Description>default settings for locally hosted aspnet pages</Description>
+    <Description>little library allowing simple cookie based user authentication without a backing database</Description>
     <PackageTags>library dotnet-core</PackageTags>
   </PropertyGroup>
 
