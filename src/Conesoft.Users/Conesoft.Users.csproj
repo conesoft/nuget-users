@@ -10,8 +10,22 @@
   <PackageProjectUrl>https://github.com/conesoft/users</PackageProjectUrl>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <Version>1.1.9</Version>
+    <Authors>davepermen</Authors>
+    <Company>Conesoft</Company>
+    <PackageIcon>Conesoft.forNuget.x256.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/conesoft/users</PackageProjectUrl>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Description>default settings for locally hosted aspnet pages</Description>
+    <PackageTags>library dotnet-core</PackageTags>
+  </PropertyGroup>
+
   <ItemGroup>
-    <None Include="Conesoft.forNuget.x256.png" Pack="true" PackagePath="" />
+    <None Include="Conesoft.forNuget.x256.png" Pack="true" PackagePath="\" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    <None Include="..\..\LICENSE" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,6 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Conesoft.Files" Version="1.5.9" />
+    <PackageReference Include="Conesoft.Files" Version="1.5.15" />
   </ItemGroup>
 </Project>
