@@ -1,0 +1,34 @@
+﻿<html>
+<head>
+    <style>
+        @@media (prefers-color-scheme: dark) {
+            :root {
+                color-scheme: dark;
+            }
+
+            *, input {
+                font-family: monospace;
+            }
+        }
+    </style>
+</head>
+<body>
+    @if (User?.Identity?.IsAuthenticated != true)
+    {
+    <form method=post action=/user/login>
+        <input type=text name=user>
+        <input type=password name=password>
+        <input type=hidden name=returnto value='/'>
+        <input type=submit value=login>
+    </form>
+    }
+    else
+    {
+    <h1>@User.Identity.Name</h1>
+    <form method=post action=/user/logout>
+        <input type=hidden name=returnto value='/'>
+        <input type=submit value=logout>
+    </form>
+    }
+</body>
+</html>
