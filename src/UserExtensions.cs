@@ -1,4 +1,6 @@
-﻿namespace Conesoft.Users;
+﻿using static Conesoft.Users.UserExtensions;
+
+namespace Conesoft.Users;
 public static class UserExtensions
 {
     private static string directory = ".";
@@ -37,21 +39,18 @@ public static class UserExtensions
     {
         app.UseAuthentication();
 
-        // using get, which is bad, but pretty code
-        app.MapGet("/user/login", (string user, string password) =>
-            VerifyPersistedAccount(user, password)
-            ? Results.SignIn(Principal.From(user), new() { IsPersistent = true }, cadas)
-            : Results.Unauthorized());
+        app.MapPost("/user/login", (HttpContext context) =>
+        {
+            var login = context.GetLoginForm();
+            return VerifyPersistedAccount(login.Username, login.Password)
+                ? SignInAndRedirect(Principal.From(login.Username), new() { IsPersistent = true }, cadas, login.RedirectTo)
+                : Results.Unauthorized();
+        });
 
-        app.MapGet("/user/logout", () => Results.SignOut());
-
-        // using post, which would be 'right' (example code)
-        app.MapPost("/user/login", (LoginForm form) =>
-            VerifyPersistedAccount(form.User, form.Password)
-            ? SignInAndRedirect(Principal.From(form.User), new() { IsPersistent = true }, cadas, form.ReturnTo)
-            : Results.Unauthorized());
-
-        app.MapPost("/user/logout", (LogoutForm form) => SignOutAndRedirect(form.ReturnTo));
+        app.MapPost("/user/logout", (HttpContext context) => {
+            var logout = context.GetLogoutForm();
+            return SignOutAndRedirect(logout.RedirectTo);
+        });
     }
 
     private static IResult SignInAndRedirect(ClaimsPrincipal claimsPrincipal, AuthenticationProperties? properties, string authenticationScheme, string url) => StackedResults.Stack(
@@ -77,17 +76,17 @@ public static class UserExtensions
         }
     }
 
-    public record LoginForm(string User, string Password, string ReturnTo)
-    {
-        public static ValueTask<LoginForm?> BindAsync(HttpContext context, ParameterInfo _) => ValueTask.FromResult<LoginForm?>(new(
-            context.Request.Form["user"],
-            context.Request.Form["password"],
-            context.Request.Form["returnto"]
-        ));
-    }
+    public record LoginForm(string Username, string Password, string RedirectTo);
+    public record LogoutForm(string RedirectTo);
+}
 
-    public record LogoutForm(string ReturnTo)
-    {
-        public static ValueTask<LogoutForm?> BindAsync(HttpContext context, ParameterInfo _) => ValueTask.FromResult<LogoutForm?>(new(context.Request.Form["returnto"]));
-    }
+static class Extensions
+{
+    public static LoginForm GetLoginForm(this HttpContext context) => new(
+        context.Request.Form["username"],
+        context.Request.Form["password"],
+        context.Request.Form["redirectto"]
+    );
+
+    public static LogoutForm GetLogoutForm(this HttpContext context) => new(context.Request.Form["redirectto"]);
 }
