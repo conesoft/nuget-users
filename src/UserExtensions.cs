@@ -17,19 +17,22 @@ public static class UserExtensions
         options.LogoutPath = "/user/logout";
     });
 
-    private static async Task<ClaimsPrincipal?> FindVerifiedAccount(string username, string password, bool createifneeded)
+    private static async Task<ClaimsPrincipal?> FindVerifiedAccount(string username, string password, bool createIfNeeded)
     {
         PasswordHasher<string> passwordHasher = new();
         var userfilepath = Path.Combine(directory, username + ".txt");
 
-        if (File.Exists(userfilepath) == false && createifneeded == false)
+        if (File.Exists(userfilepath) == false)
         {
-            return null;
-        }
-        else if (File.Exists(userfilepath) == false)
-        {
-            var newsalt = Guid.NewGuid().ToString().ToLower().Replace("-", "");
-            await File.WriteAllLinesAsync(userfilepath, new[] { newsalt, passwordHasher.HashPassword(username, password + newsalt) });
+            if (createIfNeeded)
+            {
+                var newsalt = Guid.NewGuid().ToString().ToLower().Replace("-", "");
+                await File.WriteAllLinesAsync(userfilepath, new[] { newsalt, passwordHasher.HashPassword(username, password + newsalt) });
+            }
+            else
+            {
+                return null;
+            }
         }
 
         var lines = await File.ReadAllLinesAsync(userfilepath);
@@ -56,7 +59,17 @@ public static class UserExtensions
         app.MapPost("/user/login", async (HttpContext context) =>
         {
             var login = context.GetLoginForm();
-            return await FindVerifiedAccount(login.Username, login.Password, createifneeded: true) switch
+            return await FindVerifiedAccount(login.Username, login.Password, createIfNeeded: false) switch
+            {
+                var user when user is not null => SignInAndRedirect(user, new() { IsPersistent = true }, cadas, login.RedirectTo),
+                _ => Results.Unauthorized()
+            };
+        });
+
+        app.MapPost("/user/register", async (HttpContext context) =>
+        {
+            var login = context.GetLoginForm();
+            return await FindVerifiedAccount(login.Username, login.Password, createIfNeeded: true) switch
             {
                 var user when user is not null => SignInAndRedirect(user, new() { IsPersistent = true }, cadas, login.RedirectTo),
                 _ => Results.Unauthorized()
