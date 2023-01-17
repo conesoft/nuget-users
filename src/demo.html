@@ -15,18 +15,27 @@
 <body>
     @if (User?.Identity?.IsAuthenticated != true)
     {
+    <h1>login</h1>
     <form method=post action=/user/login>
-        <input type=text name=user>
+        <input type=text name=username>
         <input type=password name=password>
-        <input type=hidden name=returnto value='/'>
+        <input type=hidden name=redirectto value='/'>
         <input type=submit value=login>
+    </form>
+
+    <h1>register</h1>
+    <form method=post action=/user/register>
+        <input type=text name=username>
+        <input type=password name=password>
+        <input type=hidden name=redirectto value='/'>
+        <input type=submit value=register>
     </form>
     }
     else
     {
     <h1>@User.Identity.Name</h1>
     <form method=post action=/user/logout>
-        <input type=hidden name=returnto value='/'>
+        <input type=hidden name=redirectto value='/'>
         <input type=submit value=logout>
     </form>
     }
