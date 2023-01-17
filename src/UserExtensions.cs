@@ -66,7 +66,7 @@ public static class UserExtensions
             var user = await FindVerifiedAccount(login.Username, login.Password, createIfNeeded: false);
 
             return StackedResults.Stack()
-                .PushIfTrue(user != null, Results.SignIn(user!, new() { IsPersistent = true }, cadas))
+                .PushIfTrue(user != null, () => Results.SignIn(user!, new() { IsPersistent = true }, cadas))
                 .Push(Results.LocalRedirect(login.RedirectTo));
         });
 
@@ -76,7 +76,7 @@ public static class UserExtensions
             var user = await FindVerifiedAccount(login.Username, login.Password, createIfNeeded: true);
 
             return StackedResults.Stack()
-                .PushIfTrue(user != null, Results.SignIn(user!, new() { IsPersistent = true }, cadas))
+                .PushIfTrue(user != null, () => Results.SignIn(user!, new() { IsPersistent = true }, cadas))
                 .Push(Results.LocalRedirect(login.RedirectTo));
         });
 

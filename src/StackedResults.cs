@@ -14,9 +14,9 @@ class StackedResults : IResult
         return this;
     }
 
-    public StackedResults PushIfTrue(bool check, IResult result)
+    public StackedResults PushIfTrue(bool check, Func<IResult> resultGenerator)
     {
-        if(check) results.Push(result);
+        if(check) results.Push(resultGenerator());
         return this;
     }
 
