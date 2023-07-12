@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <RootNamespace>Conesoft.Users</RootNamespace>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>2.1.4</Version>
+    <Version>2.1.5</Version>
     <Authors>davepermen</Authors>
     <Company>Conesoft</Company>
     <PackageIcon>Conesoft.forNuget.x256.png</PackageIcon>
@@ -28,6 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Conesoft.Files" Version="1.6.4" />
+    <PackageReference Include="Conesoft.Files" Version="1.7.6" />
   </ItemGroup>
 </Project>

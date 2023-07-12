@@ -6,10 +6,10 @@ static class Forms
     public record Logout(string RedirectTo);
 
     public static Login GetLoginForm(this HttpContext context) => new(
-        context.Request.Form["username"],
-        context.Request.Form["password"],
-        context.Request.Form["redirectto"]
+        context.Request.Form["username"].FirstOrDefault() ?? "",
+        context.Request.Form["password"].FirstOrDefault() ?? "",
+        context.Request.Form["redirectto"].FirstOrDefault() ?? ""
     );
 
-    public static Logout GetLogoutForm(this HttpContext context) => new(context.Request.Form["redirectto"]);
+    public static Logout GetLogoutForm(this HttpContext context) => new(context.Request.Form["redirectto"].FirstOrDefault() ?? "");
 }
