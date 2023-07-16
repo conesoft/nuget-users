@@ -47,7 +47,10 @@ public static class UserExtensions
                     Salt: newsalt,
                     HashedPassword: passwordHasher.HashPassword(username, password + newsalt),
                     Roles: Array.Empty<string>()
-                )));
+                ), new JsonSerializerOptions
+                {
+                    WriteIndented = true
+                }));
             }
             else
             {
@@ -56,7 +59,7 @@ public static class UserExtensions
         }
 
         var logindata = JsonSerializer.Deserialize<LoginDataFile>(await File.ReadAllTextAsync(userfilepath));
-        if(logindata == null)
+        if (logindata == null)
         {
             return null;
         }
