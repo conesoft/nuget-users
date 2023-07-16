@@ -1,9 +1,14 @@
-﻿namespace Conesoft.Users;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+
+namespace Conesoft.Users;
 
 public static class UserExtensions
 {
     private static string directory = ".";
     private static readonly string cadas = CookieAuthenticationDefaults.AuthenticationScheme;
+
+    private static readonly string logindatafile = "login-data.json";
 
     public static void AddUsers(this IServiceCollection services, string cookiename, string directory) => services.AddAuthentication(cadas).AddCookie(cadas, options =>
     {
@@ -17,17 +22,32 @@ public static class UserExtensions
         options.LogoutPath = "/user/logout";
     });
 
+    record LoginDataFile(
+        [property: JsonPropertyName("salt")] string Salt,
+        [property: JsonPropertyName("hashed-password")] string HashedPassword,
+        [property: JsonPropertyName("roles")] string[] Roles
+    );
+
     private static async Task<ClaimsPrincipal?> FindVerifiedAccount(string username, string password, bool createIfNeeded)
     {
         PasswordHasher<string> passwordHasher = new();
-        var userfilepath = Path.Combine(directory, username + ".txt");
+        var userpath = Path.Combine(directory, username);
 
-        if (File.Exists(userfilepath) == false)
+        var userfilepath = Path.Combine(userpath, logindatafile);
+
+        if (Directory.Exists(userpath) == false)
         {
             if (createIfNeeded)
             {
                 var newsalt = Guid.NewGuid().ToString().ToLower().Replace("-", "");
-                await File.WriteAllLinesAsync(userfilepath, new[] { newsalt, passwordHasher.HashPassword(username, password + newsalt) });
+
+                Directory.CreateDirectory(userpath);
+
+                await File.WriteAllTextAsync(userfilepath, JsonSerializer.Serialize(new LoginDataFile(
+                    Salt: newsalt,
+                    HashedPassword: passwordHasher.HashPassword(username, password + newsalt),
+                    Roles: Array.Empty<string>()
+                )));
             }
             else
             {
@@ -35,19 +55,20 @@ public static class UserExtensions
             }
         }
 
-        var lines = await File.ReadAllLinesAsync(userfilepath);
-        var salt = lines.First();
-        var hashed = lines.Skip(1).First();
-        var roles = lines.Skip(2).ToArray();
+        var logindata = JsonSerializer.Deserialize<LoginDataFile>(await File.ReadAllTextAsync(userfilepath));
+        if(logindata == null)
+        {
+            return null;
+        }
 
-        if (passwordHasher.VerifyHashedPassword(username, hashed, password + salt) != PasswordVerificationResult.Success)
+        if (passwordHasher.VerifyHashedPassword(username, logindata.HashedPassword, password + logindata.Salt) != PasswordVerificationResult.Success)
         {
             return null;
         }
 
         return new ClaimsPrincipal(
             new ClaimsIdentity(
-                roles
+                logindata.Roles
                     .Select(r => new Claim(ClaimTypes.Role, r))
                     .Append(new Claim(ClaimTypes.Name, username))
                     .Append(new Claim(ClaimTypes.NameIdentifier, username)),
@@ -83,7 +104,7 @@ public static class UserExtensions
         app.MapPost("/user/logout", (HttpContext context) =>
         {
             var logout = context.GetLogoutForm();
-            
+
             return StackedResults.Stack()
                 .Push(Results.SignOut())
                 .Push(Results.LocalRedirect(logout.RedirectTo));
