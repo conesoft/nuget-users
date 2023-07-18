@@ -5,6 +5,6 @@ jobs:
     steps:
       - uses: actions/checkout@main
       - uses: actions/setup-dotnet@main
-      - uses: actions/publish-nuget@main
+      - uses: brandedoutcast/publish-nuget@master
         with:
           NUGET_KEY: ${{secrets.NUGET_KEY}}
