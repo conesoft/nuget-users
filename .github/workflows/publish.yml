@@ -7,4 +7,5 @@ jobs:
       - uses: actions/setup-dotnet@main
       - uses: brandedoutcast/publish-nuget@master
         with:
+          PROJECT_FILE_PATH: src/
           NUGET_KEY: ${{secrets.NUGET_KEY}}
