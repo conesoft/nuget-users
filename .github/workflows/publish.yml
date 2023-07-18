@@ -4,6 +4,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@main
+      - uses: actions/setup-node@main
+      - run: npm i glob
       - uses: actions/setup-dotnet@main
       - uses: conesoft/publish-nuget@main
         with:
