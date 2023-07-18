@@ -1,4 +1,4 @@
-# users
+# Conesoft.Users
 
 little library allowing simple cookie based user authentication without a backing database
 
