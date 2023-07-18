@@ -7,5 +7,5 @@ jobs:
       - uses: actions/setup-dotnet@main
       - uses: brandedoutcast/publish-nuget@master
         with:
-          PROJECT_FILE_PATH: src/
+          PROJECT_FILE_PATH: src/Conesoft.Users.csproj
           NUGET_KEY: ${{secrets.NUGET_KEY}}
