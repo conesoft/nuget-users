@@ -5,7 +5,6 @@ jobs:
     steps:
       - uses: actions/checkout@main
       - uses: actions/setup-dotnet@main
-      - uses: brandedoutcast/publish-nuget@master
+      - uses: conesoft/publish-nuget@main
         with:
-          PROJECT_FILE_PATH: src/Conesoft.Users.csproj
           NUGET_KEY: ${{secrets.NUGET_KEY}}
