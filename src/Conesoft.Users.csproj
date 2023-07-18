@@ -6,11 +6,11 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>2.2.1</Version>
+    <Version>2.2.2</Version>
     <Authors>davepermen</Authors>
     <Company>Conesoft</Company>
     <PackageIcon>Conesoft.forNuget.x256.png</PackageIcon>
-    <PackageProjectUrl>https://github.com/conesoft/users</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/conesoft/nuget-users</PackageProjectUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <Description>little library allowing simple cookie based user authentication without a backing database</Description>
