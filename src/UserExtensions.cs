@@ -112,5 +112,17 @@ public static class UserExtensions
 
             return Results.File(path.Path);
         });
+
+        app.MapPost("/user/update-profile-picture", async (HttpContext context, IFormFile file) =>
+        {
+            var username = context.User?.Identity?.Name;
+            if (username != null)
+            {
+                var path = LoginData.UserDirectory / username / LoginData.ProfilePictureFilename;
+
+                using var stream = path.OpenWrite();
+                await file.CopyToAsync(stream);
+            }
+        }).Accepts<IFormFile>("image/jpeg");
     }
 }

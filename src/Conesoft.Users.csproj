@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Conesoft.Files" Version="1.7.9" />
+    <PackageReference Include="Conesoft.Files" Version="1.8.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.9" />
   </ItemGroup>
 </Project>
