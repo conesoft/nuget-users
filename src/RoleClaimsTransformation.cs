@@ -15,9 +15,9 @@ public class RoleClaimsTransformation : IClaimsTransformation
             {
                 if (changes.ThereAreChanges)
                 {
-                    var files = await changes.All.ReadFromJson<LoginData>();
+                    var files = await changes.All.Where(f => f.Name == LoginData.LoginDataFilename.FilenameWithExtension).ReadFromJson<LoginData>();
 
-                    users = files.Where(f => f.Name == LoginData.LoginDataFilename.FilenameWithExtension).ToDictionary(f => f.Parent.Name, f => f.Content);
+                    users = files.ToDictionary(f => f.Parent.Name, f => f.Content);
                 }
             }
         });
