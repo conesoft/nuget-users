@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <RootNamespace>Conesoft.Users</RootNamespace>
@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>2.2.6</Version>
+    <Version>2.2.8</Version>
     <Authors>davepermen</Authors>
     <Company>Conesoft</Company>
     <PackageIcon>Conesoft.forNuget.x256.png</PackageIcon>
@@ -29,6 +29,5 @@
 
   <ItemGroup>
     <PackageReference Include="Conesoft.Files" Version="1.8.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.9" />
   </ItemGroup>
 </Project>
