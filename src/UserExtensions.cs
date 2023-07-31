@@ -110,12 +110,14 @@ public static class UserExtensions
             
             path = path.Exists ? path : LoginData.UserDirectory / LoginData.ProfilePictureFilename;
 
-            return Results.File(path.Path);
+            return Results.File(path.Path, contentType: "image/jpeg");
         });
 
         app.MapPost("/user/update-profile-picture", async (HttpContext context, IFormFile file) =>
         {
             var username = context.User?.Identity?.Name;
+            var logout = context.GetLogoutForm();
+
             if (username != null)
             {
                 var path = LoginData.UserDirectory / username / LoginData.ProfilePictureFilename;
@@ -123,6 +125,8 @@ public static class UserExtensions
                 using var stream = path.OpenWrite();
                 await file.CopyToAsync(stream);
             }
-        }).Accepts<IFormFile>("image/jpeg");
+
+            return Results.LocalRedirect(logout.RedirectTo);
+        });
     }
 }
