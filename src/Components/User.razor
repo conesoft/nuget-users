@@ -1,0 +1,47 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+
+@namespace Conesoft
+
+<cnsft-user>
+    <AuthorizeView>
+        <Authorized>
+            <button>
+                @{
+                    var name = context.User?.Identity?.Name ?? null;
+                    if(name != null)
+                    {
+                        <img src="/user/@(name).jpg">
+                    }
+                    @name
+                }
+            </button>
+            <menu>
+                <li>
+                    <a href="https://conesoft.net">user settings</a>
+                </li>
+                <li>
+                    <form method=post action=/user/logout>
+                        <input type=hidden name=redirectto value='/'>
+                        <input type=submit value=logout>
+                    </form>
+                </li>
+            </menu>
+        </Authorized>
+        <NotAuthorized>
+            <button>log in</button>
+            <menu>
+                <li>
+                    <a href="https://conesoft.net">register your token</a>
+                </li>
+                <li>
+                    <form method=post action=/user/login>
+                        <input type=text name=username>
+                        <input type=password name=password>
+                        <input type=hidden name=redirectto value='/'>
+                        <input type=submit value=login>
+                    </form>
+                </li>
+            </menu>
+        </NotAuthorized>
+    </AuthorizeView>
+</cnsft-user>

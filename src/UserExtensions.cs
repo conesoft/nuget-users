@@ -1,56 +1,47 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
+﻿using Microsoft.AspNetCore.Authentication;
 
 namespace Conesoft.Users;
 
 public static class UserExtensions
 {
-    private static string directory = ".";
     private static readonly string cadas = CookieAuthenticationDefaults.AuthenticationScheme;
 
-    private static readonly string logindatafile = "login-data.json";
 
-    public static void AddUsers(this IServiceCollection services, string cookiename, string directory) => services.AddAuthentication(cadas).AddCookie(cadas, options =>
+    public static void AddUsers(this IServiceCollection services, string cookiename, string directory)
     {
-        UserExtensions.directory = directory;
+        LoginData.UserDirectory = Directory.From(directory);
 
-        options.Cookie.Name = cookiename;
-        options.ExpireTimeSpan = TimeSpan.FromDays(365);
-        options.SlidingExpiration = true;
-        options.ReturnUrlParameter = "redirectto";
-        options.LoginPath = "/user/login";
-        options.LogoutPath = "/user/logout";
-    });
+        services.AddAuthentication(cadas).AddCookie(cadas, options =>
+        {
 
-    record LoginDataFile(
-        [property: JsonPropertyName("salt")] string Salt,
-        [property: JsonPropertyName("hashed-password")] string HashedPassword,
-        [property: JsonPropertyName("roles")] string[] Roles
-    );
+            options.Cookie.Name = cookiename;
+            options.ExpireTimeSpan = TimeSpan.FromDays(365);
+            options.SlidingExpiration = true;
+            options.ReturnUrlParameter = "redirectto";
+            options.LoginPath = "/user/login";
+            options.LogoutPath = "/user/logout";
+        });
+        services.AddSingleton<IClaimsTransformation>(_ => new RoleClaimsTransformation());
+    }
 
     private static async Task<ClaimsPrincipal?> FindVerifiedAccount(string username, string password, bool createIfNeeded)
     {
         PasswordHasher<string> passwordHasher = new();
-        var userpath = Path.Combine(directory, username);
+        var userpath = LoginData.UserDirectory / username;
 
-        var userfilepath = Path.Combine(userpath, logindatafile);
+        var userfilepath = userpath / LoginData.LoginDataFilename;
 
-        if (Directory.Exists(userpath) == false)
+        if (userpath.Exists == false)
         {
             if (createIfNeeded)
             {
                 var newsalt = Guid.NewGuid().ToString().ToLower().Replace("-", "");
 
-                Directory.CreateDirectory(userpath);
-
-                await File.WriteAllTextAsync(userfilepath, JsonSerializer.Serialize(new LoginDataFile(
+                await userfilepath.WriteAsJson(new LoginData(
                     Salt: newsalt,
                     HashedPassword: passwordHasher.HashPassword(username, password + newsalt),
                     Roles: Array.Empty<string>()
-                ), new JsonSerializerOptions
-                {
-                    WriteIndented = true
-                }));
+                ));
             }
             else
             {
@@ -58,7 +49,7 @@ public static class UserExtensions
             }
         }
 
-        var logindata = JsonSerializer.Deserialize<LoginDataFile>(await File.ReadAllTextAsync(userfilepath));
+        var logindata = await userfilepath.ReadFromJson<LoginData>();
         if (logindata == null)
         {
             return null;
@@ -71,10 +62,10 @@ public static class UserExtensions
 
         return new ClaimsPrincipal(
             new ClaimsIdentity(
-                logindata.Roles
-                    .Select(r => new Claim(ClaimTypes.Role, r))
-                    .Append(new Claim(ClaimTypes.Name, username))
-                    .Append(new Claim(ClaimTypes.NameIdentifier, username)),
+                new[] {
+                    new Claim(ClaimTypes.Name, username),
+                    new Claim(ClaimTypes.NameIdentifier, username)
+                },
                 cadas
             )
         );
@@ -111,6 +102,15 @@ public static class UserExtensions
             return StackedResults.Stack()
                 .Push(Results.SignOut())
                 .Push(Results.LocalRedirect(logout.RedirectTo));
+        });
+
+        app.MapGet("/user/{username}.jpg", (string username) =>
+        {
+            var path = LoginData.UserDirectory / username / LoginData.ProfilePictureFilename;
+            
+            path = path.Exists ? path : LoginData.UserDirectory / LoginData.ProfilePictureFilename;
+
+            return Results.File(path.Path);
         });
     }
 }
