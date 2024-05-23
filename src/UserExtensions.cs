@@ -40,7 +40,7 @@ public static class UserExtensions
                 await userfilepath.WriteAsJson(new LoginData(
                     Salt: newsalt,
                     HashedPassword: passwordHasher.HashPassword(username, password + newsalt),
-                    Roles: Array.Empty<string>()
+                    Roles: []
                 ));
             }
             else
@@ -62,10 +62,10 @@ public static class UserExtensions
 
         return new ClaimsPrincipal(
             new ClaimsIdentity(
-                new[] {
+                [
                     new Claim(ClaimTypes.Name, username),
                     new Claim(ClaimTypes.NameIdentifier, username)
-                },
+                ],
                 cadas
             )
         );

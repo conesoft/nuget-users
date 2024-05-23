@@ -5,7 +5,7 @@ namespace Conesoft.Users;
 
 public class RoleClaimsTransformation : IClaimsTransformation
 {
-    private Dictionary<string, LoginData> users = new();
+    private Dictionary<string, LoginData> users = [];
 
     public RoleClaimsTransformation()
     {
