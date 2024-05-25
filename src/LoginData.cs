@@ -11,5 +11,5 @@ record LoginData(
     public static Directory UserDirectory = Directory.Invalid;
     public static Filename LoginDataFilename => Filename.FromExtended("login-data.json");
     public static Filename ProfilePictureFilename => Filename.FromExtended("profile-picture.jpg");
-    public static LoginData Empty => new("", "", Array.Empty<string>());
+    public static LoginData Empty => new("", "", []);
 };
