@@ -1,17 +1,19 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Conesoft.Users;
 
-public class RoleClaimsTransformation : IClaimsTransformation
+public class RoleClaimsTransformation : IClaimsTransformation, IDisposable
 {
     private Dictionary<string, LoginData> users = [];
+    private readonly CancellationTokenSource cancellationTokenSource = new();
 
     public RoleClaimsTransformation()
     {
         var watcher = Task.Run(async () =>
         {
-            await foreach (var changes in LoginData.UserDirectory.Live(allDirectories: true).Changes())
+            await foreach (var changes in LoginData.UserDirectory.Live(allDirectories: true).Changes().WithCancellation(cancellationTokenSource.Token))
             {
                 if (changes.ThereAreChanges)
                 {
@@ -22,6 +24,8 @@ public class RoleClaimsTransformation : IClaimsTransformation
             }
         });
     }
+
+    public void Dispose() => cancellationTokenSource.Cancel();
 
     public Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal)
     {
