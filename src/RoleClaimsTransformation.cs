@@ -13,14 +13,10 @@ public class RoleClaimsTransformation : IClaimsTransformation, IDisposable
     {
         var watcher = Task.Run(async () =>
         {
-            await foreach (var changes in LoginData.UserDirectory.Live(allDirectories: true).Changes().WithCancellation(cancellationTokenSource.Token))
+            await foreach (var changes in LoginData.UserDirectory.Live(allDirectories: true, cancellationTokenSource.Token))
             {
-                if (changes.ThereAreChanges)
-                {
-                    var files = await changes.All.Files().Where(f => f.Name == LoginData.LoginDataFilename.FilenameWithExtension).ReadFromJson<LoginData>();
-
-                    users = files.ToDictionary(f => f.Parent.Name, f => f.Content);
-                }
+                var files = await LoginData.UserDirectory.AllFiles.Where(f => f.Name == LoginData.LoginDataFilename.FilenameWithExtension).ReadFromJson<LoginData>();
+                users = files.ToDictionary(f => f.Parent.Name, f => f.Content);
             }
         });
     }
