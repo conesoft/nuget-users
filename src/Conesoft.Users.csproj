@@ -28,6 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Conesoft.Files" Version="3.0.0" />
+    <PackageReference Include="Conesoft.Files" Version="3.0.3" />
   </ItemGroup>
 </Project>
