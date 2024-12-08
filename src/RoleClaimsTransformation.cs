@@ -9,13 +9,13 @@ public class RoleClaimsTransformation : IClaimsTransformation, IDisposable
     private Dictionary<string, LoginData> users = [];
     private readonly CancellationTokenSource cancellationTokenSource = new();
 
-    public RoleClaimsTransformation()
+    public RoleClaimsTransformation(UserDirectory userDirectory)
     {
         var watcher = Task.Run(async () =>
         {
-            await foreach (var changes in LoginData.UserDirectory.Live(allDirectories: true, cancellationTokenSource.Token))
+            await foreach (var changes in userDirectory.Root.Live(allDirectories: true, cancellationTokenSource.Token))
             {
-                var files = await LoginData.UserDirectory.AllFiles.Where(f => f.Name == LoginData.LoginDataFilename.FilenameWithExtension).ReadFromJson<LoginData>();
+                var files = await userDirectory.Root.AllFiles.Where(f => f.Name == userDirectory.GetLoginDataDefaultFilename().FilenameWithExtension).ReadFromJson<LoginData>();
                 users = files.ToDictionary(f => f.Parent.Name, f => f.Content);
             }
         });
