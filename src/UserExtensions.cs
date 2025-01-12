@@ -16,23 +16,11 @@ public static class UserExtensions
         services.AddAuthentication(cadas).AddCookie(cadas);
         services.AddSingleton<IClaimsTransformation, RoleClaimsTransformation>();
         services.AddTransient<UserDirectory>();
+        services.AddAntiforgery();
+        services.AddCascadingAuthenticationState();
+        services.AddAuthorization();
 
         return webApplication;
-    }
-
-    [Obsolete("use builder.AddUsers(options => { ... }) instead")]
-    public static void AddUsers(this IServiceCollection services, string cookiename, string directory)
-    {
-        services.AddAuthentication(cadas).AddCookie(cadas, options =>
-        {
-            options.Cookie.Name = cookiename;
-            options.ExpireTimeSpan = TimeSpan.FromDays(365);
-            options.SlidingExpiration = true;
-            options.ReturnUrlParameter = "redirectto";
-            options.LoginPath = "/user/login";
-            options.LogoutPath = "/user/logout";
-        });
-        services.AddSingleton<IClaimsTransformation, RoleClaimsTransformation>();
     }
 
     private static async Task<ClaimsPrincipal?> FindVerifiedAccount(string username, string password, UserDirectory userDirectory, bool createIfNeeded)
@@ -84,7 +72,11 @@ public static class UserExtensions
 
     public static void MapUsers(this WebApplication app)
     {
-        app.UseAuthentication();
+        app
+            .UseAuthentication()
+            .UseAuthorization()
+            .UseAntiforgery()
+            ;
 
         app.MapPost("/user/login", async (HttpContext context, UserDirectory userDirectory) =>
         {
