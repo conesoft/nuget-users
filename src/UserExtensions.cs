@@ -137,6 +137,6 @@ public static class UserExtensions
             }
 
             return Results.LocalRedirect(logout.RedirectTo);
-        });
+        }).DisableAntiforgery();
     }
 }
