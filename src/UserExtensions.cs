@@ -70,7 +70,7 @@ public static class UserExtensions
         );
     }
 
-    public static void MapUsers(this WebApplication app)
+    public static WebApplication MapUsers(this WebApplication app)
     {
         app
             .UseAuthentication()
@@ -129,6 +129,8 @@ public static class UserExtensions
             }
 
             return Results.LocalRedirect(logout.RedirectTo);
-        }).DisableAntiforgery();
+        });
+
+        return app;
     }
 }
