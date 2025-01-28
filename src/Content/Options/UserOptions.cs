@@ -1,4 +1,4 @@
-﻿namespace Conesoft.Users;
+﻿namespace Conesoft.Users.Content.Options;
 
 public class UserOptions
 {

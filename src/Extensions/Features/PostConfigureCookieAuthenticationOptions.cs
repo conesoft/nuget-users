@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Options;
 
-namespace Conesoft.Users;
+namespace Conesoft.Users.Extensions.Features;
 
 // thanks to https://stackoverflow.com/a/47036122/1528847
-public class PostConfigureCookieAuthenticationOptions(IOptions<UserOptions> userOptions) : IPostConfigureOptions<CookieAuthenticationOptions>
+public class PostConfigureCookieAuthenticationOptions(IOptions<Content.Options.UserOptions> userOptions) : IPostConfigureOptions<CookieAuthenticationOptions>
 {
     void IPostConfigureOptions<CookieAuthenticationOptions>.PostConfigure(string? name, CookieAuthenticationOptions options)
     {

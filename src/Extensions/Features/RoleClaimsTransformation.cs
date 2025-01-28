@@ -1,27 +1,32 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Conesoft.Users.Content.Storage;
+using Microsoft.AspNetCore.Authentication;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Conesoft.Users;
+namespace Conesoft.Users.Extensions.Features;
 
 public class RoleClaimsTransformation : IClaimsTransformation, IDisposable
 {
-    private Dictionary<string, LoginData> users = [];
+    private Dictionary<string, Data> users = [];
     private readonly CancellationTokenSource cancellationTokenSource = new();
 
-    public RoleClaimsTransformation(UserDirectory userDirectory)
+    public RoleClaimsTransformation(Content.Storage.Directory userDirectory)
     {
         var watcher = Task.Run(async () =>
         {
             await foreach (var changes in userDirectory.Root.Live(allDirectories: true, cancellationTokenSource.Token))
             {
-                var files = await userDirectory.Root.AllFiles.Where(f => f.Name == userDirectory.GetLoginDataDefaultFilename().FilenameWithExtension).ReadFromJson<LoginData>();
+                var files = await userDirectory.Root.AllFiles.Where(f => f.Name == userDirectory.GetLoginDataDefaultFilename().FilenameWithExtension).ReadFromJson<Data>();
                 users = files.ToDictionary(f => f.Parent.Name, f => f.Content);
             }
         });
     }
 
-    public void Dispose() => cancellationTokenSource.Cancel();
+    public void Dispose()
+    {
+        cancellationTokenSource.Cancel();
+        GC.SuppressFinalize(this);
+    }
 
     public Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal)
     {

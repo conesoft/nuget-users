@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Conesoft.Users;
+namespace Conesoft.Users.Helpers;
 
 class StackedResults : IResult
 {
@@ -16,7 +16,7 @@ class StackedResults : IResult
 
     public StackedResults PushIfTrue(bool check, Func<IResult> resultGenerator)
     {
-        if(check) results.Push(resultGenerator());
+        if (check) results.Push(resultGenerator());
         return this;
     }
 
