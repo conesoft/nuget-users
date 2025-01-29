@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
 
-namespace Conesoft.Users.Extensions;
+namespace Conesoft.Users;
 
 public static class ApplicationExtensions
 {
@@ -11,7 +11,7 @@ public static class ApplicationExtensions
         var services = webApplication.Services;
 
         services.AddOptions<Content.Options.UserOptions>().Configure(configuration);
-        services.AddSingleton<IPostConfigureOptions<CookieAuthenticationOptions>, Features.PostConfigureCookieAuthenticationOptions>();
+        services.AddSingleton<IPostConfigureOptions<CookieAuthenticationOptions>, Extensions.Features.PostConfigureCookieAuthenticationOptions>();
         services.AddAuthentication(CookieScheme.Cadas).AddCookie(CookieScheme.Cadas);
         services.AddSingleton<IClaimsTransformation, RoleClaimsTransformation>();
         services.AddTransient<Content.Storage.Directory>();
