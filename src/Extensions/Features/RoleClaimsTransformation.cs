@@ -8,23 +8,20 @@ namespace Conesoft.Users.Extensions.Features;
 public class RoleClaimsTransformation : IClaimsTransformation, IDisposable
 {
     private Dictionary<string, Data> users = [];
-    private readonly CancellationTokenSource cancellationTokenSource = new();
+    private readonly CancellationTokenSource? cancellationTokenSource;
 
     public RoleClaimsTransformation(Content.Storage.Directory userDirectory)
     {
-        var watcher = Task.Run(async () =>
+        cancellationTokenSource = userDirectory.Root.Live(async () =>
         {
-            await foreach (var changes in userDirectory.Root.Live(allDirectories: true, cancellationTokenSource.Token))
-            {
-                var files = await userDirectory.Root.AllFiles.Where(f => f.Name == userDirectory.GetLoginDataDefaultFilename().FilenameWithExtension).ReadFromJson<Data>();
-                users = files.ToDictionary(f => f.Parent.Name, f => f.Content);
-            }
-        });
+            var files = await userDirectory.Root.AllFiles.Where(f => f.Name == userDirectory.GetLoginDataDefaultFilename().FilenameWithExtension).ReadFromJson<Data>();
+            users = files.ToDictionary(f => f.Parent.Name, f => f.Content);
+        }, allDirectories: true);
     }
 
     public void Dispose()
     {
-        cancellationTokenSource.Cancel();
+        cancellationTokenSource?.Cancel();
         GC.SuppressFinalize(this);
     }
 
