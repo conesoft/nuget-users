@@ -19,7 +19,7 @@
     <form method=post action=/user/login>
         <input type=text name=username>
         <input type=password name=password>
-        <input type=hidden name=redirectto value='/'>
+        <!--<input type=hidden name=redirectto value='/'>-->
         <input type=submit value=login>
     </form>
 
@@ -27,7 +27,7 @@
     <form method=post action=/user/register>
         <input type=text name=username>
         <input type=password name=password>
-        <input type=hidden name=redirectto value='/'>
+        <!--<input type=hidden name=redirectto value='/'>-->
         <input type=submit value=register>
     </form>
     }
@@ -35,12 +35,12 @@
     {
     <h1>@User.Identity.Name</h1>
     <form method=post action=/user/logout>
-        <input type=hidden name=redirectto value='/'>
+        <!--<input type=hidden name=redirectto value='/'>-->
         <input type=submit value=logout>
     </form>
 
     <form method=post action=/user/update/password>
-        <input type=hidden name=redirectto value='/'>
+        <!--<input type=hidden name=redirectto value='/'>-->
         <input type=password name=current-password>
         <input type=password name=new-password>
         <input type=submit value=changepassword>
