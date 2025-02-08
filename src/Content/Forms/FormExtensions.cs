@@ -1,4 +1,6 @@
-﻿namespace Conesoft.Users.Content.Forms;
+﻿using System.Text.Json.Serialization;
+
+namespace Conesoft.Users.Content.Forms;
 
 
 static class FormExtensions
@@ -23,7 +25,11 @@ static class FormExtensions
 
     private static string GetLocalReferrer(this HttpContext context)
     {
-        if(context.Request.GetTypedHeaders().Referer is Uri referer && context.Request.Host.Host == referer.Host)
+        var host = context.Request.Headers.TryGetValue("X-Forwarded-Host", out var value)
+            ? value.ToString()
+            : context.Request.Host.ToString();
+
+        if(context.Request.GetTypedHeaders().Referer is Uri referer && host == referer.Host)
         {
             return referer.PathAndQuery;
         };
