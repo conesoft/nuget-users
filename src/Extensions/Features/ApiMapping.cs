@@ -60,7 +60,7 @@ public static class ApiMapping
             var login = context.GetLoginForm();
             var user = await FindVerifiedAccount(login.Username, login.Password, userDirectory, createIfNeeded: false);
 
-            return StackedResults.Stack()
+            return QueuedResults.Queue()
                 .PushIfTrue(user != null, () => Results.SignIn(user!, new() { IsPersistent = true }, CookieScheme.Cadas))
                 .Push(Results.LocalRedirect(login.RedirectTo));
         });
@@ -70,7 +70,7 @@ public static class ApiMapping
             var login = context.GetLoginForm();
             var user = await FindVerifiedAccount(login.Username, login.Password, userDirectory, createIfNeeded: true);
 
-            return StackedResults.Stack()
+            return QueuedResults.Queue()
                 .PushIfTrue(user != null, () => Results.SignIn(user!, new() { IsPersistent = true }, CookieScheme.Cadas))
                 .Push(Results.LocalRedirect(login.RedirectTo));
         });
@@ -79,7 +79,7 @@ public static class ApiMapping
         {
             var logout = context.GetLogoutForm();
 
-            return StackedResults.Stack()
+            return QueuedResults.Queue()
                 .Push(Results.SignOut())
                 .Push(Results.LocalRedirect(logout.RedirectTo));
         });

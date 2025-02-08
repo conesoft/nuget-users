@@ -27,7 +27,7 @@ static class FormExtensions
     {
         var host = context.Request.Headers.TryGetValue("X-Forwarded-Host", out var value)
             ? value.ToString()
-            : context.Request.Host.ToString();
+            : context.Request.Host.ToString().Split(":").First();
 
         if(context.Request.GetTypedHeaders().Referer is Uri referer && host == referer.Host)
         {
