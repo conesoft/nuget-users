@@ -16,7 +16,7 @@ public class RoleClaimsTransformation : IClaimsTransformation, IDisposable
         {
             var files = await userDirectory.Root.AllFiles.Where(f => f.Name == userDirectory.GetLoginDataDefaultFilename().FilenameWithExtension).ReadFromJson<Data>();
             users = files.ToDictionary(f => f.Parent.Name, f => f.Content);
-        }, allDirectories: true);
+        }, all: true);
     }
 
     public void Dispose()
