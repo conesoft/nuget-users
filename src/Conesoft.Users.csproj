@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>3.1.13</Version>
+    <Version>3.1.14</Version>
     <Authors>davepermen</Authors>
     <Company>Conesoft</Company>
     <PackageIcon>Conesoft.forNuget.x256.png</PackageIcon>
@@ -28,6 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Conesoft.Files" Version="4.1.4" />
+    <PackageReference Include="Conesoft.Files" Version="4.1.5" />
   </ItemGroup>
 </Project>
